@@ -5,6 +5,9 @@
 * [NEAR-CLI](https://docs.near.org/tools/near-cli#setup)
 * [yarn](https://classic.yarnpkg.com/en/docs/install#mac-stable)
 
+## Install dependencies
+yarn install
+
 
 ## Mint An NFT
 
