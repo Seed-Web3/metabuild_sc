@@ -19,6 +19,8 @@ export class Contract extends NearContract {
     tokenMetadataById: UnorderedMap;
     metadata: NFTContractMetadata;
 
+    timeCreated: number; //Time lock
+    day = 1000 * 60 * 60 * 24 ;
     /*
         initialization function (can only be called once).
         this initializes the contract with metadata that was passed in and
@@ -38,6 +40,7 @@ export class Contract extends NearContract {
         this.tokensById = new LookupMap("tokensById");
         this.tokenMetadataById = new UnorderedMap("tokenMetadataById");
         this.metadata = metadata;
+        this.timeCreated = new Date().getTime();
     }
 
     default() {
@@ -46,10 +49,17 @@ export class Contract extends NearContract {
 
     /*
         MINT
-        TODO: can only mint once
+        TODO: 
+            *can only mint once 
+            *TimeLocked
     */
     @call
     nft_mint({ token_id, metadata, receiver_id, perpetual_royalties }) {
+        //Check if the time of minting hasn't passed 1 day(default value)
+        if(this.timeCreated + this.day < new Date().getTime()){
+            near.log(`Minting is locked`);
+            return ; 
+        }
         return internalMint({ contract: this, tokenId: token_id, metadata: metadata, receiverId: receiver_id, perpetualRoyalties: perpetual_royalties });
     }
 

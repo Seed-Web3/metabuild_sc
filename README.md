@@ -67,3 +67,4 @@ After you've minted your NFT you can make a view call to get a response containi
 ```bash=
 near view $NFT_CONTRACT_ID nft_token '{"token_id": "token-1"}'
 ```
+

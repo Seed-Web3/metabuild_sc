@@ -11,7 +11,7 @@ test.beforeEach(async t => {
     // Deploy the counter contract.
     const counter = await root.createAndDeploy(
         root.getSubAccount('counter').accountId,
-        './build/contract.wasm'
+        './build/glory.wasm'
     );
 
     // Init the contract
