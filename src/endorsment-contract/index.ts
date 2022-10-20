@@ -18,10 +18,6 @@ export class Contract extends NearContract {
     tokensById: LookupMap;
     tokenMetadataById: UnorderedMap;
     metadata: NFTContractMetadata;
-
-    timeCreated: number; //Time lock
-    timePeriod: number;
-    day = 1000 * 60 * 60 * 24 ;
     /*
         initialization function (can only be called once).
         this initializes the contract with metadata that was passed in and
@@ -30,11 +26,10 @@ export class Contract extends NearContract {
     constructor({
         owner_id, 
         metadata = {
-            spec: "glory-badge-1.0.0",
-            name: "Seed Glory Badge",
-            symbol: "SGB"
-        },
-        time_period = 1
+            spec: "endorsement-1.0.0",
+            name: "Seed Endorsement",
+            symbol: "SE"
+        }
     }) {
         super()
         this.owner_id = owner_id;
@@ -42,8 +37,6 @@ export class Contract extends NearContract {
         this.tokensById = new LookupMap("tokensById");
         this.tokenMetadataById = new UnorderedMap("tokenMetadataById");
         this.metadata = metadata;
-        this.timeCreated = new Date().getTime();
-        this.timePeriod = time_period;
     }
 
     default() {
@@ -58,23 +51,6 @@ export class Contract extends NearContract {
     */
     @call
     nft_mint({ token_id, metadata, receiver_id, perpetual_royalties }) {
-        //Check if the time of minting hasn't passed 1 day(default value)
-        if(this.timeCreated + (this.timePeriod * this.day) < new Date().getTime()){
-            near.log(`Minting is locked`);
-            return ; 
-        }
-        //Check if the NFT has been minted before
-        let token_list = internalTokensForOwner({ contract: this, accountId: receiver_id, fromIndex: "0", limit: 200 });
-        let exists = false;
-        token_list.map( (val,key) => {
-            if(val["token_id"] === token_id){
-                exists=true
-             }
-        })
-        if(exists){
-            near.log(`This NFT has already been minted before`);
-            return ; 
-        }
         return internalMint({ contract: this, tokenId: token_id, metadata: metadata, receiverId: receiver_id, perpetualRoyalties: perpetual_royalties });
     }
 
