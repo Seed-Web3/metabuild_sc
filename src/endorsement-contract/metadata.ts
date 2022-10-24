@@ -48,6 +48,7 @@ export class NFTContractMetadata {
 export class TokenMetadata {
     title?: string;
     description?: string;
+    text?: string;
     media?: string;
     media_hash?: string;
     copies?: number;
@@ -63,6 +64,7 @@ export class TokenMetadata {
         {
             title, 
             description, 
+            text,
             media, 
             mediaHash, 
             copies, 
@@ -76,6 +78,7 @@ export class TokenMetadata {
         }:{
             title?: string, 
             description?: string, 
+            text?: string,
             media?: string, 
             mediaHash?: string, 
             copies?: number, 
@@ -88,7 +91,8 @@ export class TokenMetadata {
             referenceHash?: string}
         ) {
         this.title = title // ex. "Arch Nemesis: Mail Carrier" or "Parcel #5055"
-        this.description = description // free-form description
+        this.description = description // free-form description 
+        this.text = text //Endorsement message
         this.media = media // URL to associated media, preferably to decentralized, content-addressed storage
         this.media_hash = mediaHash // Base64-encoded sha256 hash of content referenced by the `media` field. Required if `media` is included.
         this.copies = copies // number of copies of this set of metadata in existence when token was minted.

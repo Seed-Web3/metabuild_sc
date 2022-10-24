@@ -45,9 +45,6 @@ export class Contract extends NearContract {
 
     /*
         MINT
-        TODO: 
-            *can only mint once 
-            *TimeLocked
     */
     @call
     nft_mint({ token_id, metadata, receiver_id, perpetual_royalties }) {
