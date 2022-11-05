@@ -52,9 +52,6 @@ export class Contract extends NearContract {
 
     /*
         MINT
-        TODO: 
-            *can only mint once 
-            *TimeLocked
     */
     @call
     nft_mint({ token_id, metadata, receiver_id, perpetual_royalties }) {
@@ -76,6 +73,16 @@ export class Contract extends NearContract {
             return ; 
         }
         return internalMint({ contract: this, tokenId: token_id, metadata: metadata, receiverId: receiver_id, perpetualRoyalties: perpetual_royalties });
+    }
+
+    /*
+        BULK MINT
+    */
+    @call
+    bulk_nft_mint({ token_id, metadata, perpetual_royalties, list}) {
+        for(let i = 0 ; i<list.length; i++){
+            this.nft_mint({ token_id: token_id+`-${i}`, metadata: metadata, receiver_id: list[i], perpetual_royalties: perpetual_royalties});
+        }
     }
 
     /*
