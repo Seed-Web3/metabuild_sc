@@ -110,7 +110,13 @@ Endorsement
 near call $NFT_CONTRACT_ID nft_mint '{"token_id": "token-1", "metadata": {"title": "TEST-ENDORSEMENT", "description": "This is a drill", "text": "This is the first endorsement test"}, "receiver_id": "'$NFT_CONTRACT_ID'"}' --accountId $NFT_CONTRACT_ID --amount 0.1
 ```
 
-After you've minted the token go to wallet.testnet.near.org to `your-account.testnet` and look in the collections tab and check out your new sample NFT! 
+After you've minted the token go to wallet.testnet.near.org to `your-account.testnet` and look in the collections tab and check out your new sample NFT! *
+
+### Bulk Minting Token
+Glory Badge
+```bash=
+near call $NFT_CONTRACT_ID bulk_nft_mint '{"token_id": "token-1", "metadata": {"title": "TEST-NFT", "description": "This is a drill", "media": "https://media.giphy.com/media/6SZ5iwN70lJyOdLZZH/giphy.gif"}, "list": ["'$NFT_CONTRACT_ID'", "'$NFT_CONTRACT_ID_2'"]}' --accountId $NFT_CONTRACT_ID --amount 0.1
+```
 
 ## View NFT Information
 
