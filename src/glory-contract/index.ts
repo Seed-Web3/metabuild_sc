@@ -18,7 +18,7 @@ export class Contract extends NearContract {
     tokensById: LookupMap;
     tokenMetadataById: UnorderedMap;
     metadata: NFTContractMetadata;
-
+    tokenId: number;
     timeCreated: number; //Time lock
     timePeriod: number;
     day = 1000 * 60 * 60 * 24 ;
@@ -44,6 +44,7 @@ export class Contract extends NearContract {
         this.metadata = metadata;
         this.timeCreated = new Date().getTime();
         this.timePeriod = time_period;
+        this.tokenId = 1;
     }
 
     default() {
@@ -54,17 +55,17 @@ export class Contract extends NearContract {
         MINT
     */
     @call
-    nft_mint({ token_id, metadata, receiver_id, perpetual_royalties }) {
+    nft_mint({ metadata, receiver_id, perpetual_royalties }) {
         //Check if the time of minting hasn't passed 1 day(default value)
-        if(this.timeCreated + (this.timePeriod * this.day) < new Date().getTime()){
-            near.log(`Minting is locked`);
-            return ; 
-        }
+        // if(this.timeCreated + (this.timePeriod * this.day) < new Date().getTime()){
+        //     near.log(`Minting is locked`);
+        //     return ; 
+        // }
         //Check if the NFT has been minted before
         let token_list = internalTokensForOwner({ contract: this, accountId: receiver_id, fromIndex: "0", limit: 200 });
         let exists = false;
         token_list.map( (val,key) => {
-            if(val["token_id"] === token_id){
+            if(val["token_id"] === this.tokenId.toString()){
                 exists=true
              }
         })
@@ -72,16 +73,16 @@ export class Contract extends NearContract {
             near.log(`This NFT has already been minted before`);
             return ; 
         }
-        return internalMint({ contract: this, tokenId: token_id, metadata: metadata, receiverId: receiver_id, perpetualRoyalties: perpetual_royalties });
+        return internalMint({ contract: this, tokenId: (this.tokenId++).toString(), metadata: metadata, receiverId: receiver_id, perpetualRoyalties: perpetual_royalties });
     }
 
     /*
         BULK MINT
     */
     @call
-    bulk_nft_mint({ token_id, metadata, perpetual_royalties, list}) {
+    bulk_nft_mint({ metadata, perpetual_royalties, list}) {
         for(let i = 0 ; i<list.length; i++){
-            this.nft_mint({ token_id: token_id+`-${i}`, metadata: metadata, receiver_id: list[i], perpetual_royalties: perpetual_royalties});
+            this.nft_mint({ metadata: metadata, receiver_id: list[i], perpetual_royalties: perpetual_royalties});
         }
     }
 

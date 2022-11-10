@@ -18,6 +18,7 @@ export class Contract extends NearContract {
     tokensById: LookupMap;
     tokenMetadataById: UnorderedMap;
     metadata: NFTContractMetadata;
+    tokenId: number;
     /*
         initialization function (can only be called once).
         this initializes the contract with metadata that was passed in and
@@ -37,6 +38,7 @@ export class Contract extends NearContract {
         this.tokensById = new LookupMap("tokensById");
         this.tokenMetadataById = new UnorderedMap("tokenMetadataById");
         this.metadata = metadata;
+        this.tokenId = 1;
     }
 
     default() {
@@ -47,8 +49,8 @@ export class Contract extends NearContract {
         MINT
     */
     @call
-    nft_mint({ token_id, metadata, receiver_id, perpetual_royalties }) {
-        return internalMint({ contract: this, tokenId: token_id, metadata: metadata, receiverId: receiver_id, perpetualRoyalties: perpetual_royalties });
+    nft_mint({ metadata, receiver_id, perpetual_royalties }) {
+        return internalMint({ contract: this, tokenId: (this.tokenId++).toString(), metadata: metadata, receiverId: receiver_id, perpetualRoyalties: perpetual_royalties });
     }
 
     /*
